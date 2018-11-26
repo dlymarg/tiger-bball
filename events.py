@@ -14,7 +14,6 @@ def make_dataset(root, folder, target = 'mydata.csv'):
 	return df
 
 def get_periods(filename, folder = ''):
-	# need to generate the rows
 	with open(folder + filename + '.html') as file:
 		soup = BeautifulSoup(file, "lxml")
 	# the following is for the format used in 2017-2018
@@ -47,13 +46,11 @@ def add_period(period_record, period_num):
  	
  	p = str(period_num) + '-'
  	timestamp_list = []
- 	# rows = get_rows(period_list)
  	for row in period_record:
  		try:
 	 		temp = row.split(get_time(row))[0] + p + get_time(row) + row.split(get_time(row))[1]
 	 		timestamp_list.append(temp)
 	 	except IndexError:
-	 		# print(get_time(row))
 	 		print("Problem with: " + row)
  	return timestamp_list
 
@@ -98,8 +95,8 @@ def timestamp_to_seconds(periodandtime):
 def get_event1(row, rows_before, rows_after):
 	useit = False # a Boolean that says whether we have found a primary event in this row or not
 	foundflag = '' # a string that contains the keyword that told us we found the primary event (and that begins the string that identifies the event)
-	event1flags = ['GOOD!', 'MISSED', 'STEAL'] ## possible candidates for the variable foundflag. Include conditional ones later, like Turnover.
-	alt_event1flags = ['FOUL', 'TURNOVR']
+	event1flags = ['GOOD!', 'MISSED', 'STEAL'] ## possible candidates for the variable foundflag
+	alt_event1flags = ['FOUL', 'TURNOVR'] ## conditional candidates for variable foundflag. these events can be primary, but are not always so
 	for flag in event1flags:
 		if (flag in row):
 			if (not 'FT SHOT' in row): ## !!!!!!! May need to change when we include checks for other keywords in event1flags, since assumes 'FT SHOT' never in same row as event1
@@ -123,24 +120,18 @@ def get_event1(row, rows_before, rows_after):
 				elif all([(flag == 'TURNOVR'), ('STEAL' not in row), ('STEAL' not in rows_after[0])]): 
 					useit = True
 					foundflag = flag
-				# else:
-				# 	useit = True
-				# 	foundflag = flag
 		if (useit):
 			return foundflag + row.split(foundflag[1]).split(' by')[0]
 		else:
 			return None
-		# test for events that may not necessarily be primary (e.g., turnovers)
-		# return None
 
 def get_event2(row, rows_before, rows_after):
-	useit = False # a Boolean that says whether we have found a primary event in this row or not
-	foundflag = '' # a string that contains the keyword that told us we found the primary event (and that begins the string that identifies the event)
-	event2flags = ['ASSIST', 'BLOCK'] ## possible candidates for the variable foundflag. Include conditional ones later, like Turnover.
-	alt_event2flags = ['FOUL', 'REBOUND', 'TURNOVR', 'FT SHOT']
+	useit = False # a Boolean that says whether we have found a secondary event in this row or not
+	foundflag = '' # a string that contains the keyword that told us we found the secondary event (and that begins the string that identifies the event)
+	event2flags = ['ASSIST', 'BLOCK'] ## possible candidates for the variable foundflag
+	alt_event2flags = ['FOUL', 'REBOUND', 'TURNOVR', 'FT SHOT'] ## conditional candidates for variable foundflag. these events can be secondary, but are not always so
 	for flag in event2flags:
 		if (flag in row):
-			# if (not 'FT SHOT' in row): ## !!!!!!! May need to change when we include checks for other keywords in event1flags, since assumes 'FT SHOT' never in same row as event1
 			useit = True
 			foundflag = flag
 	if (useit):
@@ -173,8 +164,6 @@ def get_event2(row, rows_before, rows_after):
 			return foundflag + row.split(foundflag[1]).split(' by')[0]
 		else:
 			return None
-		# test for events that may not necessarily be secondary (e.g., fouls)
-		# return None
 
 def get_event3(row, rows_before, rows_after):
 	useit = False
@@ -183,8 +172,7 @@ def get_event3(row, rows_before, rows_after):
 	for flag in event3flags:
 		if all([(get_time(row) == get_time(rows_before[-1])), (flag in row)]):
 			if (flag == 'FT SHOT'):
-				if all([('FOUL' in row), any([('GOOD!' in rows_before[-1]), ('ASSIST' in rows_before[-1])]), ('FT SHOT' not in rows_before[-1])]): ## how to distinguish good and bad FG from good and bad FT?
-					## perhaps flags should be 'GOOD! FT SHOT' and 'MISSED FT SHOT'
+				if all([('FOUL' in row), any([('GOOD!' in rows_before[-1]), ('ASSIST' in rows_before[-1])]), ('FT SHOT' not in rows_before[-1])]):
 					## want some way to indicate that a first FT shot can be a tertiary event or that a second FT shot can be a tertiary event
 					## possible scenarios for (1):
 						## (a) good unassisted shot, foul, first -- and only -- FT shot
@@ -227,7 +215,6 @@ def get_event4(row, rows_before, rows_after):
 	event4flags = ['GOOD! FT SHOT', 'MISSED FT SHOT', 'REBOUND']
 	for flag in event4flags:
 		if all([(flag in row), (get_time(row) == get_time(rows_before[-1]))]):
-			## would it be shorter to combine the good and missed FT shot into one if condition and nest good and missed?
 			## possible scenarios for first FT shot to be quaternary event:
 				## (a) good shot, assist, foul, first -- and only -- FT shot
 			## possible scenarios for second FT shot to be quaternary event:
@@ -237,9 +224,6 @@ def get_event4(row, rows_before, rows_after):
 				if all([('FOUL' in row), ('ASSIST' in rows_before[-1])]):
 					useit = True
 					foundflag = flag
-				# elif (('GOOD! FT SHOT' or '(DEADBALL)' in rows_before[-1]) and ((('MISSED' in rows_before[-2]) or ('MISSED' in rows_before[-3])) and (('FT SHOT' not in rows_before[-2]) or ('FT SHOT' not in rows_before[-3])))):
-				# 	useit = True
-				# 	foundflag = flag
 			elif (flag == 'MISSED FT SHOT'):
 				if all([('FOUL' in row), ('ASSIST' in rows_before[-1])]):
 					useit = True
@@ -247,7 +231,7 @@ def get_event4(row, rows_before, rows_after):
 				elif all([any([('GOOD! FT SHOT' in rows_before[-1]), ('MISSED FT SHOT' in rows_before[-1])]), ('MISSED' in rows_before[-2])]):
 					useit = True
 					foundflag = flag
-			elif (flag == 'REBOUND'): ## need to find out how to distinguish off rebs vs def rebs
+			elif (flag == 'REBOUND'):
 				if all([any([('MISSED FT SHOT' in row), ('MISSED FT SHOT' in rows_before[-1])]), ('FOUL' in rows_before[-1]), any([(get_time(row) != get_time(rows_before[-2])), (get_time(row) != get_time(rows_before[-3]))])]): ## foul is primary event, second free throw is missed, rebound occurs
 					reb_type = row.split('(')[1].split(')')[0]
 					useit = True
@@ -293,12 +277,6 @@ def get_player(row, event):
 	last_name = player.split(',')[0]
 	return last_name
 
-## perhaps need as many as 5 event functions in total
-## some of these lines become problematic when substitutions are introduced...
 ## what about 3 point FT shots? they're rare, but they happen
-## made change in get_event2 if statement with regard to rebounds
-## need to find some way to record non-event items, but have them not affect indicies specified
-## could it be possible to take them out and write them somewhere else?
-## particularly concerned with substitutions
 ## make sure to dump anything that looks like it isn't an event (e.g., substitutions) and place in separate file
 ## if concerned about miscategorization, then look through spreadsheet manually for verification
