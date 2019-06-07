@@ -6,7 +6,8 @@ This project was one of only four nominated to represent Towson University in th
 # Play-By-Play Data Extraction
 To analyze the play-by-play data, all data from the team's statistics pages must be extracted. `events.py` evaluates an HTML page and categorizes events based on when they occur. An example of a webpage we are working with can be found [here](https://static.towsontigers.com/custompages/MBB/17-18/mb021518.htm). Unfortunately, data in some seasons are formatted differently. The figures below show the difference in formatting of statistics in different seasons:
 
-![](/images/pbp_2013.png) ![](/images/pbp_2017.png)
+
+<img src="/project_details/pbp_2013.png"> <img src="/project_details/pbp_2017.png">
 
 Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted tables, which makes data extraction relatively easy. Conversely, statistics from the 2017-2018 season (bottom figure) are in text-formatted tables, which makes data extraction difficult. Code for data extraction of the latter, more difficult format is complete (this is what is in `events.py`). Once all play-by-play data is retrieved, the data is placed into a dataframe.
 
