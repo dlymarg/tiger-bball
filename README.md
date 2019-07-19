@@ -13,7 +13,7 @@ Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted t
 
 Each dataframe corresponds to a single game and consists of the time at which a play occurs, the order in which a series of events occur, the players associated with each event, and the points scored in each play. The figure below shows an example of a single play.
 
-**Image coming soon!**
+<img src="/images/event_dict.png" width="900">
 
 Using [a paper](https://statsbylopez.files.wordpress.com/2016/01/jqas-2007-3-3-1070.pdf) that identifies important factors in a basketball game (referred to as "The Four Factors"), we can obtain these factors for each player to implement our analysis. This requires us to perform computations based on the extracted data, such as turnovers per possession, effective field goal percentage, and offensive rebound percentage. Below is an example of a player's factors:
 
