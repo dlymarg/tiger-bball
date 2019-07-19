@@ -11,13 +11,11 @@ To analyze the play-by-play data, all data from the team's statistics pages must
 
 Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted tables, which makes data extraction relatively easy. Conversely, statistics from the 2017-2018 season (bottom figure) are in text-formatted tables, which makes data extraction difficult. Code for data extraction of the latter, more difficult format is complete (this is what is in `events.py`). Once all play-by-play data is retrieved, the data is placed into a dataframe.
 
-Each dataframe corresponds to a single game and consists of the time at which a play occurs, the order in which a series of events occur, the players associated with each event, and the points scored in each play. The figure below shows an example of a single play.
+Each dataframe corresponds to a single game and consists of the time at which a play occurs, the order in which a series of events occur, the players associated with each event, and the points scored in each play. The figure below shows an example of a single play. In this example, the user input is the timestamp representing 5 minutes and 24 seconds remaining in the first half. Notice that the primary event is a good layup by Gorham, the secondary event is a foul committed by Gustys, and the tertiary event is a good free throw shot by Gorham. During this play, Towson scored 3 points and two players on each team were substituted. The "1" next to a player's name shows that they are on the court during this play.
 
 <img src="/images/event_dict.png" width="900">
 
-Using [a paper](https://statsbylopez.files.wordpress.com/2016/01/jqas-2007-3-3-1070.pdf) that identifies important factors in a basketball game (referred to as "The Four Factors"), we can obtain these factors for each player to implement our analysis. This requires us to perform computations based on the extracted data, such as turnovers per possession, effective field goal percentage, and offensive rebound percentage. Below is an example of a player's factors:
-
-**Image coming soon!**
+Using [a paper](https://statsbylopez.files.wordpress.com/2016/01/jqas-2007-3-3-1070.pdf) that identifies important factors in a basketball game (referred to as "The Four Factors"), we can obtain these factors for each player to implement our analysis. This requires us to perform computations based on the extracted data, such as turnovers per possession, effective field goal percentage, and offensive rebound percentage.
 
 A numpy array for a player can be generated for any time interval. The elements in the numpy array are in the following order: field goals attempted, effective field goal percentage, turnovers per possession, offensive rebound percentage, number of fouls, and effective free throw percentage.
 
