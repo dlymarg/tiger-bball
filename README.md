@@ -11,11 +11,7 @@ Similar to the diabetes study, we want to find relationships from high-dimension
 This project was one of only 4 nominated to represent Towson University in the 2019 [Barry Goldwater Scholarship](https://goldwater.scholarsapply.org/), a highly selective scholarship awared to sophomore and junior STEM students who intend to develop into research leaders in STEM. To view the report submitted to the Goldwater Scholarship Foundation, which includes background, methodology, and future work, see `project_details` and compile `tiger_bball_summary.tex` with XeLaTeX (Packages required: geometry, amsmath, amssymb, fancyhdr, fontspec, hyperref, caption, graphicx, enumitem).
 
 # Play-By-Play Data Extraction
-To analyze the play-by-play data, all data from the team's statistics pages must be extracted. `events12.py` evaluates an HTML page and categorizes events based on when they occur. An example of a webpage we are working with can be found [here](https://static.towsontigers.com/custompages/MBB/17-18/mb021518.htm). Unfortunately, data in some seasons are formatted differently. The figures below show the difference in formatting of statistics in different seasons:
-
-<img src="/project_details/pbp_2013.png"> <img src="/project_details/pbp_2017.png">
-
-Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted tables, which makes data extraction relatively easy. Conversely, statistics from the 2017-2018 season (bottom figure) are in text-formatted tables, which makes data extraction difficult. Code for data extraction of the latter, more difficult format is complete (this is what is in `events.py`). Once all play-by-play data is retrieved, the data is placed into a dataframe.
+To analyze the play-by-play data, all data from the team's statistics pages must be extracted. `events12.py` evaluates an HTML page and categorizes events based on when they occur. An example of a webpage we are working with can be found [here](https://static.towsontigers.com/custompages/MBB/17-18/mb021518.htm). Once all play-by-play data is retrieved, the data is placed into a dataframe.
 
 Each dataframe corresponds to a single game and consists of the time at which a play occurs, the order in which a series of events occur, the players associated with each event, and the points scored in each play. The figure below shows an example of a single play. In this example, the user input is the timestamp representing 5 minutes and 24 seconds remaining in the first half. Notice that the primary event is a good layup by Gorham, the secondary event is a foul committed by Gustys, and the tertiary event is a good free throw shot by Gorham. During this play, Towson scored 3 points and two players on each team were substituted. The "1" next to a player's name shows that they are on the court during this play.
 
@@ -33,3 +29,11 @@ We use a network of nodes and edges (i.e., a _graph_) to visualize our dataset b
 
 <!-- Future work: Clustering Algorithm and Topological Analysis -->
 <!-- Once all play-by-play data have been placed into a dataframe, a clustering algorithm and topology will be applied to the factors mentioned above. The clustering algorithm we will be using is DBSCAN, an algorithm that groups data based on areas of high and low density. Once the clustering is completed, [topological techniques](https://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/) introduced by Dr. Gunnar Carlsson will be applied to understand which parameters have the greatest influence when grouped together. This is done with the understanding that there is not just one type of grouping of parameters. Topological data analysis highlighed by Carlsson will enable extraction of those types. -->
+
+# Future Work: More Expansive Data Extraction and Analysis
+
+Unfortunately, data in some seasons are formatted differently. The figures below show the difference in formatting of statistics in different seasons:
+
+<img src="/project_details/pbp_2013.png"> <img src="/project_details/pbp_2017.png">
+
+Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted tables, which makes data extraction relatively easy. Conversely, statistics from the 2017-2018 season (bottom figure) are in text-formatted tables, which makes data extraction difficult. Code for data extraction of the latter, more difficult format is complete (this is what is in `events12.py`).
