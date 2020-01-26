@@ -21,14 +21,27 @@ The play-by-play data are quantified using statistician Dean Oliver's [Four Fact
 
 Every Four Factors profile is stored in a numpy array. The elements in the numpy array are in the following order: field goals attempted, effective field goal percentage, turnovers per possession, offensive rebound percentage, number of fouls, and effective free throw percentage.
 
-# Visualization of Play-By-Play Data
+# Visualization of Play-By-Play Data Using the Mapper Algorithm
 
 We use a network of nodes and edges (i.e., a _graph_) to visualize our dataset by using the Mapper algorithm. Our data points consist of the Four Factors profiles generated for each on-court player under the time intervals mentioned above. The plus/minus statistic that is calculated with each time interval is associated to each data point. Data points with similar Four Factors statistics are considered as part of the same node. Similar data points are grouped by the [DBSCAN algorithm](https://towardsdatascience.com/how-dbscan-works-and-why-should-i-use-it-443b4a191c80). A metric is used to add in edges as Four Factors statistics vary and as one traverses along the graph, the variation of the plus/minus statistic (mentioned above) is used. The goal of data visualization is the identify Four Factors profiles that consistently appear for each on-court player and in conjuction with a very positive or a very negative plus/minus statistic. Such knowledge may be useful to identify optimal lineup combinations at key points in games. Below is the output from the Mapper algorithm for the 2017-8 season
 
 <img src="/images/mapper_graph.png">
 
+An interactive version of our mapper graph is available in `basketball_mapperhtml`. It is very likely that the arrangements of components will differ from the image, but the graphs are the same. As you hover your mouse over the nodes in each graph, you will see the Four Factors profiles in each node.
+
 <!-- Future work: Clustering Algorithm and Topological Analysis -->
 <!-- Once all play-by-play data have been placed into a dataframe, a clustering algorithm and topology will be applied to the factors mentioned above. The clustering algorithm we will be using is DBSCAN, an algorithm that groups data based on areas of high and low density. Once the clustering is completed, [topological techniques](https://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/) introduced by Dr. Gunnar Carlsson will be applied to understand which parameters have the greatest influence when grouped together. This is done with the understanding that there is not just one type of grouping of parameters. Topological data analysis highlighed by Carlsson will enable extraction of those types. -->
+
+# Preliminary Results
+
+Note that each node in the graph above is associated with a color. Moreover, each component of the graph has a transition of colors, from purple to yellow. For our project, each color is associated with the variation of the plus/minus statistic mentioned in the play-by-play data extraction section. Our goal is to understand which Four Factors profiles consistent appear on the court and in conjunction with a very negative plus/minus statistic or a very positive plus/minus statistic. We also want to understand what distinguishes components: how is the trend in plus/minus statistic in component A different from the trend in plus/minus statistic in component B? If we observe the series of nodes in the bottom right component from the darkest purple node to the last node before the fork, we get the following trends:
+
+
+It is clear that this component corresponds to more efficient field goal shooting and fewer turnovers per possession. These trends also agree with what one would think would contribute to better scoring. However, these trends are not as clear in other components. In the middle/top component, we observe the series of nodes that run from the middle of the image to the "middle" point in the component:
+
+
+
+We will need to implement different analysis techniques to better understand the nature of the latter series of nodes.
 
 # Future Work: More Expansive Data Extraction and Analysis
 
@@ -36,4 +49,8 @@ Unfortunately, data in some seasons are formatted differently. The figures below
 
 <img src="/project_details/pbp_2013.png"> <img src="/project_details/pbp_2017.png">
 
-Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted tables, which makes data extraction relatively easy. Conversely, statistics from the 2017-2018 season (bottom figure) are in text-formatted tables, which makes data extraction difficult. Code for data extraction of the latter, more difficult format is complete (this is what is in `events12.py`).
+Statistics from the 2013-2014 season (top figure) are placed in HTML-formatted tables, which makes data extraction relatively easy. Conversely, statistics from the 2017-2018 season (bottom figure) are in text-formatted tables, which makes data extraction difficult. Code for data extraction of the latter, more difficult format is complete (this is what is in `events12.py`). In the future, we hope to extract and implmement analysis on play-by-play data from other seasons.
+
+One avenue we can consider in our analysis is altering different parameters. For example, our analysis could change if we analyzed trends of Four Factors statistics in groups rather than individually. Additionally, we can potentially place different weights---or levels of importance---on different Four Factors statistics. In [the paper](https://statsbylopez.files.wordpress.com/2016/01/jqas-2007-3-3-1070.pdf) that outlines the Four Factors, field goal efficiency has the greatest weight, while free throw rate has the least weight. In other words, a team's field goal percentage is the greatest indicator (among the Four Factors statistics) of how a team will perform in a game. Finally, we can also adjust the length of time intervals in the Four Factors profiles. Since college basketball games are composed of two 20-minute halves, 10-minute time intervals divide each half of the game nicely.
+
+Another avenue we can consider is applying multivariate linear regression on our graph. This would make the process of analyzing trends of nodes in our graph quicker than analyzing trends of nodes using univariate linear regression (displayed above)
