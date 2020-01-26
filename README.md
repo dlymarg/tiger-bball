@@ -17,7 +17,7 @@ Each dataframe corresponds to a single game and consists of the time at which a 
 
 <img src="/images/event_dict.png" width="900">
 
-The play-by-play data are quantified using statistician Dean Oliver's [Four Factors](https://statsbylopez.files.wordpress.com/2016/01/jqas-2007-3-3-1070.pdf), which identifies important factors in a basketball game. We generate Four Factors statistics for each player (a Four Factors _profile_) to implement our analysis. This requires us to perform computations based on the extracted data, such as effective field goal percentage, turnovers per possession, and offensive rebound percentage. These computations are calculated for each on-court player over a selected 10-minute interval. The time intervals we use for each half are (in MM:SS format) 20:00-10:00, 15:00-05:00, and 10:00-00:00. We also compute a variation of the plus/minus statistic, which takes the difference of the points Towson scores from the points Towson's opponent scores over the selected time interval (e.g., if Towson scores 10 points and their opponent scores 7 points over a 10-minute interval, the plus/minus statistic over this interval would yield 3 points). The implementation of the Four Factors and plus/minus statistic are discussed in the next section (on data visualization).
+After storing all play-by-play data in a dictionary, we can perform calculations on the dataset. Some examples of calculations we can perform are in the file `examples.v1.ipynb`. For the purposes of our analysis, we quantify the data using statistician Dean Oliver's [Four Factors](https://statsbylopez.files.wordpress.com/2016/01/jqas-2007-3-3-1070.pdf), which identifies important factors in a basketball game. We generate Four Factors statistics for each player (a Four Factors _profile_) to implement our analysis. This requires us to perform computations based on the extracted data, such as effective field goal percentage, turnovers per possession, and offensive rebound percentage. These computations are calculated for each on-court player over a selected 10-minute interval. The time intervals we use for each half are (in MM:SS format) 20:00-10:00, 15:00-05:00, and 10:00-00:00. We also compute a variation of the plus/minus statistic, which takes the difference of the points Towson scores from the points Towson's opponent scores over the selected time interval (e.g., if Towson scores 10 points and their opponent scores 7 points over a 10-minute interval, the plus/minus statistic over this interval would yield 3 points). The implementation of the Four Factors and plus/minus statistic are discussed in the next section (on data visualization).
 
 Every Four Factors profile is stored in a numpy array. The elements in the numpy array are in the following order: field goals attempted, effective field goal percentage, turnovers per possession, offensive rebound percentage, number of fouls, and effective free throw percentage.
 
@@ -27,7 +27,7 @@ We use a network of nodes and edges (i.e., a _graph_) to visualize our dataset b
 
 <img src="/images/mapper_graph.png">
 
-An interactive version of our mapper graph is available in `basketball_mapperhtml`. It is very likely that the arrangements of components will differ from the image, but the graphs are the same. As you hover your mouse over the nodes in each graph, you will see the Four Factors profiles in each node.
+An interactive version of our mapper graph is available in `basketball_mapper.html`. It is very likely that the arrangements of components will differ from the image, but the graphs are the same. As you hover your mouse over the nodes in each graph, you will see the Four Factors profiles in each node.
 
 <!-- Future work: Clustering Algorithm and Topological Analysis -->
 <!-- Once all play-by-play data have been placed into a dataframe, a clustering algorithm and topology will be applied to the factors mentioned above. The clustering algorithm we will be using is DBSCAN, an algorithm that groups data based on areas of high and low density. Once the clustering is completed, [topological techniques](https://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/) introduced by Dr. Gunnar Carlsson will be applied to understand which parameters have the greatest influence when grouped together. This is done with the understanding that there is not just one type of grouping of parameters. Topological data analysis highlighed by Carlsson will enable extraction of those types. -->
@@ -36,10 +36,17 @@ An interactive version of our mapper graph is available in `basketball_mapperhtm
 
 Note that each node in the graph above is associated with a color. Moreover, each component of the graph has a transition of colors, from purple to yellow. For our project, each color is associated with the variation of the plus/minus statistic mentioned in the play-by-play data extraction section. Our goal is to understand which Four Factors profiles consistent appear on the court and in conjunction with a very negative plus/minus statistic or a very positive plus/minus statistic. We also want to understand what distinguishes components: how is the trend in plus/minus statistic in component A different from the trend in plus/minus statistic in component B? If we observe the series of nodes in the bottom right component from the darkest purple node to the last node before the fork, we get the following trends:
 
+<img src="/images/long_arm_fgp.pdf" width="200">
+<img src="/images/long_arm_to.pdf" width="200">
+<img src="/images/long_arm_oreb.pdf" width="200">
+<img src="/images/long_arm_ftr.pdf" width="200">
 
 It is clear that this component corresponds to more efficient field goal shooting and fewer turnovers per possession. These trends also agree with what one would think would contribute to better scoring. However, these trends are not as clear in other components. In the middle/top component, we observe the series of nodes that run from the middle of the image to the "middle" point in the component:
 
-
+<img src="/images/dark_tri_arm_fgp.pdf" width="200">
+<img src="/images/dark_tri_arm_to.pdf" width="200">
+<img src="/images/dark_tri_arm_oreb.pdf" width="200">
+<img src="/images/dark_tri_arm_ftr.pdf" width="200">
 
 We will need to implement different analysis techniques to better understand the nature of the latter series of nodes.
 
